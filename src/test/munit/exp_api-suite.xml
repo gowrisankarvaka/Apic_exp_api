@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="exp_api-suite.xml" />
+	<munit:test name="sys_api-main-test" doc:id="a9f3dc1c-103a-486d-9212-b569f0f76505" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock APIkit Router" doc:id="aca5c937-4044-4ec3-8904-3e92f0434829" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f1286068-4ee3-4831-b168-e516e5fbe237" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json  --- readUrl('classpath://sysapimaintest\mock_payload.dwl')]" mediaType="application/json " encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://sysapimaintest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://sysapimaintest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="httpStatus" value="#[readUrl('classpath://sysapimaintest\mock_variable_1.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="91aacfda-a0af-4dfd-b4d5-688f8b2407da" >
+				<munit:payload value="#[readUrl('classpath://sysapimaintest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://sysapimaintest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to sys_api-main" doc:id="e39c35dc-52f0-44b9-9334-5d6c8592a487" name="sys_api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="3040816b-c61c-4945-b0b7-9b857a752cdf" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import sysapimaintest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get:\customer:sys_api-config-test" doc:id="251a081a-feb7-458f-90f4-e9a53abc3f4f" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="7389b6ff-bb8f-45d4-be1c-bf289d89e768" >
+				<munit:payload value="#[readUrl('classpath://getcustomersysapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://getcustomersysapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getcustomersysapiconfigtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\customer:sys_api-config" doc:id="783c122e-10ea-4260-9b04-7d1dab6283a2" name="get:\customer:sys_api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="be84f316-5bae-4e00-b15f-7876fcc799ae" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getcustomersysapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Flow Reference" doc:id="f9adefe2-1c29-4514-9aa6-d8c8fefcbed7" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="82b12fdd-078e-42ac-9333-8eb0c41f802d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post:\customer:application\json:sys_api-config-test" doc:id="d56a4c74-2cc0-434c-bc68-147c774834ed" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="559c24ed-f530-49f0-866e-f2316f1ecc50" >
+				<munit:payload value="#[output application/json  --- readUrl('classpath://postcustomerapplicationjsonsysapiconfigtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json " />
+				<munit:attributes value="#[readUrl('classpath://postcustomerapplicationjsonsysapiconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://postcustomerapplicationjsonsysapiconfigtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\customer:application\json:sys_api-config" doc:id="282e0ea2-4e1c-4a98-b530-e939bf252b24" name="post:\customer:application\json:sys_api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="d4516495-1853-496a-a34f-4ce5b74c8d09" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import postcustomerapplicationjsonsysapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Flow Reference" doc:id="83c2b37f-8a7f-4598-9000-40ee719f3eb5" processor="flow-ref" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b67cb524-45a0-45b5-8004-c89f68a1c930" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

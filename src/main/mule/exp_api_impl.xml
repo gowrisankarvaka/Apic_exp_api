@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="df50ac82-2efc-4265-a4c1-c42ff820642c" basePath="/api" >
+		<http:request-connection host="gowriprocapi.us-e2.cloudhub.io" port="80" />
+	</http:request-config>
+	<sub-flow name="exp_api_implSub_Flow" doc:id="42fdf473-1b05-42f8-b715-3820689156bb" >
+		<ee:transform doc:name="Transform Message" doc:id="42ea1882-7825-4ed0-9c31-7aa2c486b8b8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="GET" doc:name="Request" doc:id="d1a74aed-0d65-4b57-9b9c-6d7560971c32" config-ref="HTTP_Request_configuration" path="/customer"/>
+	</sub-flow>
+	<sub-flow name="exp_api_implSub_Flow1" doc:id="9763a8e6-2fb9-42f3-a1a3-0e44fbea213f">
+		<ee:transform doc:name="Transform Message" doc:id="24ea7497-6b7b-48de-a19f-4df524ca5eb0">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="516aa43c-6d91-4d21-8520-053b7a5e49f5" config-ref="HTTP_Request_configuration" path="/customer" />
+	</sub-flow>
+</mule>
